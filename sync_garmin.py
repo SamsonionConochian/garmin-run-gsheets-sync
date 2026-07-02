@@ -40,7 +40,7 @@ def main():
             google_creds_json = f.read()
     
     if not all([google_creds_json, sheet_id]):
-        print("❌ Missing required environment variables")
+        print("❌ Missing required environment variablessssss")
         print(f"   GOOGLE_CREDENTIALS: {'✓' if google_creds_json else '✗'}")
         print(f"   SHEET_ID: {'✓' if sheet_id else '✗'}")
         return
