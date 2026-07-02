@@ -52,9 +52,21 @@ def main():
     # Connect to Garmin
     print("Connecting to Garmin...")
     try:
-        garmin = Garmin(garmin_email, garmin_password)
-        garmin.login()
-        print("✅ Connected to Garmin")
+        garmin_tokens_json = os.environ.get('GARMIN_TOKENS')
+        if not garmin_tokens_json:
+            print("❌ Missing GARMIN_TOKENS secret")
+            return
+
+        tokens = json.loads(garmin_tokens_json)
+        os.makedirs('garmin_tokens', exist_ok=True)
+        for filename, content in tokens.items():
+            local_path = os.path.join('garmin_tokens', os.path.basename(filename))
+            with open(local_path, 'w') as f:
+                f.write(content)
+
+        garmin = Garmin()
+        garmin.login("garmin_tokens")
+        print("✅ Connected to Garmin using saved tokens")
     except Exception as e:
         print(f"❌ Failed to connect to Garmin: {e}")
         return
