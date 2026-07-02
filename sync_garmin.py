@@ -30,8 +30,6 @@ def main():
     print("Starting Garmin running activities sync...")
     
     # Get credentials from environment variables
-    garmin_email = os.environ.get('GARMIN_EMAIL')
-    garmin_password = os.environ.get('GARMIN_PASSWORD')
     google_creds_json = os.environ.get('GOOGLE_CREDENTIALS')
     sheet_id = os.environ.get('SHEET_ID')  # Add sheet ID from environment
     
@@ -43,8 +41,6 @@ def main():
     
     if not all([garmin_email, garmin_password, google_creds_json, sheet_id]):
         print("❌ Missing required environment variables")
-        print(f"   GARMIN_EMAIL: {'✓' if garmin_email else '✗'}")
-        print(f"   GARMIN_PASSWORD: {'✓' if garmin_password else '✗'}")
         print(f"   GOOGLE_CREDENTIALS: {'✓' if google_creds_json else '✗'}")
         print(f"   SHEET_ID: {'✓' if sheet_id else '✗'}")
         return
@@ -52,9 +48,21 @@ def main():
     # Connect to Garmin
     print("Connecting to Garmin...")
     try:
-        garmin = Garmin(garmin_email, garmin_password)
-        garmin.login()
-        print("✅ Connected to Garmin")
+        garmin_tokens_json = os.environ.get('GARMIN_TOKENS')
+        if not garmin_tokens_json:
+            print("❌ Missing GARMIN_TOKENS secret")
+            return
+
+        tokens = json.loads(garmin_tokens_json)
+        os.makedirs('garmin_tokens', exist_ok=True)
+        for filename, content in tokens.items():
+            local_path = os.path.join('garmin_tokens', os.path.basename(filename))
+            with open(local_path, 'w') as f:
+                f.write(content)
+
+        garmin = Garmin()
+        garmin.login("garmin_tokens")
+        print("✅ Connected to Garmin using saved tokens")
     except Exception as e:
         print(f"❌ Failed to connect to Garmin: {e}")
         return
