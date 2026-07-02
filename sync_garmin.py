@@ -39,7 +39,7 @@ def main():
         with open('credentials.json', 'r') as f:
             google_creds_json = f.read()
     
-    if not all([garmin_email, garmin_password, google_creds_json, sheet_id]):
+    if not all([google_creds_json, sheet_id]):
         print("❌ Missing required environment variables")
         print(f"   GOOGLE_CREDENTIALS: {'✓' if google_creds_json else '✗'}")
         print(f"   SHEET_ID: {'✓' if sheet_id else '✗'}")
