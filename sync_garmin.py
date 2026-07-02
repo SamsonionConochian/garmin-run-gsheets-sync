@@ -30,8 +30,6 @@ def main():
     print("Starting Garmin running activities sync...")
     
     # Get credentials from environment variables
-    garmin_email = os.environ.get('GARMIN_EMAIL')
-    garmin_password = os.environ.get('GARMIN_PASSWORD')
     google_creds_json = os.environ.get('GOOGLE_CREDENTIALS')
     sheet_id = os.environ.get('SHEET_ID')  # Add sheet ID from environment
     
@@ -43,8 +41,6 @@ def main():
     
     if not all([garmin_email, garmin_password, google_creds_json, sheet_id]):
         print("❌ Missing required environment variables")
-        print(f"   GARMIN_EMAIL: {'✓' if garmin_email else '✗'}")
-        print(f"   GARMIN_PASSWORD: {'✓' if garmin_password else '✗'}")
         print(f"   GOOGLE_CREDENTIALS: {'✓' if google_creds_json else '✗'}")
         print(f"   SHEET_ID: {'✓' if sheet_id else '✗'}")
         return
